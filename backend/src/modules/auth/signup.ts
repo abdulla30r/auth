@@ -1,6 +1,7 @@
 import express from "express";
 import pool from "../../db.js";
 import bcrypt from "bcrypt";
+import { signAccessToken } from "../../utils/jwt.js";
 const router = express.Router();
 
 router.post("/", async (req, res) => {
@@ -25,9 +26,16 @@ router.post("/", async (req, res) => {
         const queryResult = await pool.query(query, [email, hashedPassword]);
         const createdUser = queryResult.rows?.[0];
 
+        // genarate jwt
+        const accessToken = signAccessToken({
+          userId: createdUser.id,
+          email: createdUser.email,
+        });
+
         return res.status(201).json({
           message: "created",
           user: { id: createdUser?.id, email: createdUser?.email },
+          accessToken,
         });
       } catch (err) {
         console.error(err);

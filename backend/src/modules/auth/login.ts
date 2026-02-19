@@ -1,6 +1,7 @@
 import express from "express";
 import pool from "../../db.js";
 import bcrypt from "bcrypt";
+import { signAccessToken } from "../../utils/jwt.js";
 const router = express.Router();
 
 router.post("/", async (req, res) => {
@@ -24,9 +25,15 @@ router.post("/", async (req, res) => {
       return res.status(401).json({ error: "Wrong Credential" });
     }
 
+    // genarate jwt
+    const accessToken = signAccessToken({
+      userId: user.id,
+      email: user.email,
+    });
+
     return res.status(200).json({
       message: "Login successful",
-      user: { id: user.id, email: user.email }
+      accessToken,
     });
   } catch (err) {
     console.log(err);

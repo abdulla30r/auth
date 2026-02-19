@@ -3,21 +3,12 @@ import { verifyAccessToken } from "../utils/jwt.js";
 
 export const requireAuth = (req: Request, res: Response, next: NextFunction) => {
   try {
-    const header = req.headers.authorization;
+    const token = req.headers.authorization?.split(" ")[1];
+    if (!token) return res.status(401).json({ error: "Unauthorized" });
 
-    if (!header || !header.startsWith("Bearer ")) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
-
-    const token = header.split(" ")[1];
-    if (!token) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
-    const decoded = verifyAccessToken(token);
-
-    req.user = decoded;
+    req.user = verifyAccessToken(token);
     next();
-  } catch (err) {
-    return res.status(401).json({ error: "Expired or invalid token" });
+  } catch {
+    return res.status(401).json({ error: "Invalid or expired token" });
   }
 };

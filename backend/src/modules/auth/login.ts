@@ -21,7 +21,7 @@ router.post("/", async (req, res) => {
       return res.status(401).json({ error: "Wrong credentials" });
     }
 
-    const accessToken = signAccessToken({ userId: user.id, email: user.email });
+    const accessToken = signAccessToken({ userId: user.id });
     return res.status(200).json({ message: "Login successful", accessToken });
   } catch (err) {
     console.error(err);

@@ -12,7 +12,10 @@ router.post("/", async (req, res) => {
   }
 
   try {
-    const existing = await pool.query("SELECT 1 FROM auth.users WHERE email = $1", [email]);
+    const existing = await pool.query(
+      "SELECT 1 FROM auth.users WHERE email = $1",
+      [email],
+    );
     if (existing.rowCount != null && existing.rowCount > 0) {
       return res.status(409).json({ error: "User already exists" });
     }
@@ -23,7 +26,7 @@ router.post("/", async (req, res) => {
       [email, hashedPassword],
     );
     const user = result.rows[0]!;
-    const accessToken = signAccessToken({ userId: user.id, email: user.email });
+    const accessToken = signAccessToken({ userId: user.id });
 
     return res.status(201).json({ message: "created", user, accessToken });
   } catch (err) {

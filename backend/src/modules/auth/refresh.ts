@@ -9,7 +9,6 @@ router.post("/", async (req, res) => {
 
     try {
         const payload = (await verifyRefreshToken(refreshToken)) as any;
-
         const accessToken = await signAccessToken({ id: payload.id });
         const newRefreshToken = await signRefreshToken({ id: payload.id });
 

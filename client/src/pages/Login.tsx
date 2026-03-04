@@ -1,7 +1,7 @@
-export default function PermissionPage() {
-  return (
-    <>
-      <h1>Login page</h1>
-    </>
-  );
+export default function Login() {
+    return (
+        <>
+            <h1>test</h1>
+        </>
+    );
 }

@@ -1,7 +1,7 @@
-export default function UserPage() {
-  return (
-    <>
-      <h1>User page</h1>
-    </>
-  );
+export default function User() {
+    return (
+        <>
+            <h1>User page</h1>
+        </>
+    );
 }

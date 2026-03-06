@@ -7,12 +7,12 @@ router.post("/", async (req, res) => {
   const { name } = req.body;
 
   if (!name) {
-    return res.status(400).json({ error: "Name is required" });
+    return res.status(400).json({ message: "Name is required" });
   }
 
   try {
     const exist = await findRolebyName(name);
-    if (exist) return res.status(409).json({ error: "Role already exists" });
+    if (exist) return res.status(409).json({ message: "Role already exists" });
 
     const newRole = await createRole(name);
     return res.status(201).json({
@@ -20,11 +20,8 @@ router.post("/", async (req, res) => {
       data: newRole,
     });
   } catch (err) {
-    // 3. Centralized error handling
-    console.error("Database error in POST /roles:", err);
-
     return res.status(500).json({
-      error: "Internal server error",
+      message: "Internal server error",
     });
   }
 });

@@ -7,7 +7,7 @@ router.post("/", async (req, res) => {
   const { name } = req.body;
 
   if (!name) {
-    return res.status(400).json({ error: "Name is required" });
+    return res.status(400).json({ message: "Name is required" });
   }
 
   try {
@@ -15,7 +15,7 @@ router.post("/", async (req, res) => {
     const existing = await findPermissionbyName(name);
 
     if (existing) {
-      return res.status(409).json({ error: "Permission already exists" });
+      return res.status(409).json({ message: "Permission already exists" });
     }
 
     // 2. Insert the new permission
@@ -29,7 +29,7 @@ router.post("/", async (req, res) => {
     console.error("Error creating permission:", err);
 
     return res.status(500).json({
-      error: "Internal server error",
+      message: "Internal server error",
     });
   }
 });

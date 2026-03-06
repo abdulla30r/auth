@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.post("/", async (req, res) => {
     const { refreshToken } = req.body;
-    if (!refreshToken) return res.status(400).json({ error: "Refresh token required" });
+    if (!refreshToken) return res.status(400).json({ message: "Refresh token required" });
 
     try {
         const payload = (await verifyRefreshToken(refreshToken)) as any;
@@ -14,7 +14,7 @@ router.post("/", async (req, res) => {
 
         return res.json({ accessToken, refreshToken: newRefreshToken });
     } catch (err) {
-        return res.status(401).json({ error: "Invalid refresh token" });
+        return res.status(401).json({ message: "Invalid refresh token" });
     }
 });
 

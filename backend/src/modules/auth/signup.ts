@@ -8,13 +8,13 @@ const router = express.Router();
 router.post("/", async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {
-    return res.status(400).json({ error: "Email and password required" });
+    return res.status(400).json({ message: "Email and password required" });
   }
 
   try {
     const existing = await findByEmail(email);
     if (existing) {
-      return res.status(409).json({ error: "User already exists" });
+      return res.status(409).json({ message: "User already exists" });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -26,7 +26,7 @@ router.post("/", async (req, res) => {
     return res.status(201).json({ message: "created", user, accessToken, refreshToken });
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ message: "Internal server error" });
   }
 });
 

@@ -19,6 +19,7 @@ router.post("/", async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await createUser(email, hashedPassword);
+
     const accessToken = await signAccessToken({ id: user.id });
     const refreshToken = await signRefreshToken({ id: user.id });
 

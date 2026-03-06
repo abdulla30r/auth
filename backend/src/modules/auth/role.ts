@@ -1,5 +1,5 @@
 import express from "express";
-import pool from "../../db.js";
+import { createRole, findRolebyName } from "../../models/role.model.js";
 
 const router = express.Router();
 
@@ -11,25 +11,13 @@ router.post("/", async (req, res) => {
   }
 
   try {
-    // 1. Check if role already exists
-    const existResult = await pool.query(
-      "SELECT name FROM auth.roles WHERE name = $1",
-      [name],
-    );
+    const exist = await findRolebyName(name);
+    if (exist) return res.status(409).json({ error: "Role already exists" });
 
-    if (existResult.rowCount && existResult.rowCount > 0) {
-      return res.status(409).json({ error: "Role already exists" });
-    }
-
-    // 2. Insert the new role
-    const result = await pool.query(
-      "INSERT INTO auth.roles(name) VALUES ($1) RETURNING id, name",
-      [name],
-    );
-
+    const newRole = await createRole(name);
     return res.status(201).json({
       message: "Role Created Successfully",
-      data: result.rows[0],
+      data: newRole,
     });
   } catch (err) {
     // 3. Centralized error handling

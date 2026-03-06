@@ -13,6 +13,7 @@ router.post("/", async (req, res) => {
 
   try {
     const user = await findByEmail(email);
+    
     if (!user || !(await bcrypt.compare(password, user.password!))) {
       return res.status(401).json({ error: "Wrong credentials" });
     }

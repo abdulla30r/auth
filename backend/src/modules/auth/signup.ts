@@ -31,7 +31,8 @@ router.post("/", async (req, res) => {
       maxAge: Number(process.env.COOKIE_MAX_AGE) * 1000,
     };
 
-    return res.status(201).cookie("refreshToken", refreshToken, cookieOptions).json({ message: "created", user, accessToken });
+    return res.status(201).cookie("refreshToken", refreshToken, cookieOptions)
+    .json({ message: "created", user, accessToken });
   } catch (err) {
     console.error(err);
     return res.status(500).json({ message: "Internal server error" });

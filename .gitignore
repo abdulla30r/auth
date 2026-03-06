@@ -2,3 +2,11 @@
 **/dist/
 **/node_modules/
 dist
+
+# local TLS certs
+certs/
+client/certs/
+client/client/certs/
+backend/certs/
+install.pem
+install-key.pem

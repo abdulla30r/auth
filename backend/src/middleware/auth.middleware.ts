@@ -6,7 +6,7 @@ export const requireAuth = async (req: Request, res: Response, next: NextFunctio
     const token = req.headers.authorization?.split(" ")[1];
     if (!token) return res.status(401).json({ message: "Unauthorized" });
 
-    req.user =await verifyAccessToken(token);
+    req.user = await verifyAccessToken(token);
     next();
   } catch {
     return res.status(401).json({ message: "Invalid or expired token" });

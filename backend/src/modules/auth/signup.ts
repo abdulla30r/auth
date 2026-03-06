@@ -1,4 +1,5 @@
 import express from "express";
+import type { CookieOptions } from "express";
 import bcrypt from "bcrypt";
 import { signAccessToken, signRefreshToken } from "../../utils/jwt.js";
 import { findByEmail, createUser } from "../../models/user.model.js";
@@ -23,7 +24,14 @@ router.post("/", async (req, res) => {
     const accessToken = await signAccessToken({ id: user.id });
     const refreshToken = await signRefreshToken({ id: user.id });
 
-    return res.status(201).json({ message: "created", user, accessToken, refreshToken });
+    const cookieOptions: CookieOptions = {
+      httpOnly: true,
+      secure: true,
+      sameSite: "strict",
+      maxAge: Number(process.env.COOKIE_MAX_AGE) * 1000,
+    };
+
+    return res.status(201).cookie("refreshToken", refreshToken, cookieOptions).json({ message: "created", user, accessToken });
   } catch (err) {
     console.error(err);
     return res.status(500).json({ message: "Internal server error" });

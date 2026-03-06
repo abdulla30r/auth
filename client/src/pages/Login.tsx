@@ -1,18 +1,25 @@
-import { useState, type SyntheticEvent } from "react";
+import { useState, useContext, type SyntheticEvent } from "react";
+import { useNavigate, Navigate } from "react-router-dom";
+import AuthContext from "../context/AuthContext";
 
 export default function Login() {
-  return (
-    <>
-      <MyForm />
-    </>
-  );
+  const { accessToken } = useContext(AuthContext);
+
+  if (accessToken) {
+    return <Navigate to="/" replace />;
+  }
+
+  return <MyForm />;
 }
 
-function MyForm(props: any) {
+function MyForm() {
   const [isSignup, setIsSignup] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+
+  const { setAccessToken, setUserEmail } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
@@ -31,35 +38,28 @@ function MyForm(props: any) {
     }
 
     try {
-      const response = await fetch(`${endpoint}`, {
+      const response = await fetch(endpoint, {
         method: "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
           email: email.trim(),
-          password: password,
+          password,
         }),
       });
 
-      if (!response.ok) {
-        const error = await response.json().catch(() => null);
-        console.log(error);
-        alert(error?.message || "Something went wrong");
-        return;
-      }
-
       const data = await response.json();
 
-      if (!response.ok) {
-        throw new Error(data.message || "Something went wrong");
+      if (response.ok && data.accessToken) {
+        setAccessToken(data.accessToken);
+        if (typeof setUserEmail === "function") setUserEmail(email.trim());
+        navigate("/");
+      } else {
+        alert(data.message || "Something went wrong");
       }
-
-      // 4. Success handling
-      alert("Success! Redirecting...");
-      // e.g., save token to localStorage or redirect via router
     } catch (error: any) {
-      // 5. Error handling
       alert(error.message);
     }
   };

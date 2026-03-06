@@ -1,7 +1,9 @@
 export default function User() {
-    return (
-        <>
-            <h1>User page</h1>
-        </>
-    );
+  return (
+    <>
+      <div className="min-h-screen flex items-center justify-center bg-gray-100">
+        <h1 className="text-3xl font-bold text-gray-800">Users</h1>
+      </div>
+    </>
+  );
 }

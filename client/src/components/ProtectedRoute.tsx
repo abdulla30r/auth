@@ -3,7 +3,11 @@ import { Navigate } from "react-router-dom";
 import AuthContext from "../context/AuthContext";
 
 export default function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const { accessToken } = useContext(AuthContext);
+  const { accessToken, loading } = useContext(AuthContext);
+
+  if (loading) {
+    return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+  }
 
   if (!accessToken) {
     return <Navigate to="/login" replace />;
